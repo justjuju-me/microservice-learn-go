@@ -24,7 +24,22 @@ func NewTransaction(accountFrom *Account, accountTo *Account, amount float64) (*
 		Amount: amount,
 		CreatedAt: time.Now(),
 	}
-	return transaction
+	
+	err := transaction.Validate()
+	
+	if err != nil {
+		return nil, err
+	}
+
+	transaction.Commit()
+
+	return transaction, nil
+}
+
+func (t *Transaction) Commit() error {
+	t.AccountFrom.Debit(t.Amount)
+	t.AccountTo.Credit(t.Amount)
+	return nil
 }
 
 func (t *Transaction) Validate() error {
