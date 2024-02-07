@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"testing"
 
+	"github.com/justjuju-me/ms-wallet/internal/entity"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -28,4 +30,26 @@ func (s *ClientDBTestSuite) TearDownTest() {
 
 func TestClientDBTestSuite(t *testing.T) {
 	suite.Run(t, new(ClientDBTestSuite))
+}
+
+func (s *ClientDBTestSuite) TestSave() {
+	client := &entity.Client{
+		ID: "1",
+		Name: "John Doe",
+		Email: "x@x.com",
+	}
+	err := s.clientDB.Save(client)
+	s.Nil(err)
+}
+
+
+func (s *ClientDBTestSuite) TestGet() {
+	client, _ := entity.NewClient("John Doe", "x@x.com")
+	s.clientDB.Save(client)
+
+	clientDB, err := s.clientDB.Get(client.ID)
+	s.Nil(err)
+	s.Equal(client.ID, clientDB.ID)
+	s.Equal(client.Name, clientDB.Name)
+	s.Equal(client.Email, clientDB.Email)
 }

@@ -16,7 +16,7 @@ func NewClientDB(db *sql.DB) *ClientDB {
 	}
 }
 
-func (c *ClientDB) Get(id string) (*entity.ClientDB, error) {
+func (c *ClientDB) Get(id string) (*entity.Client, error) {
 	client := &entity.Client{}
 	stmt, err := c.DB.Prepare("SELECT id, name, email, created_at FROM clients WHERE id = ?")
 	
