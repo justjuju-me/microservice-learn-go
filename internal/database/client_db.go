@@ -6,17 +6,17 @@ import (
 	"github.com/justjuju-me/ms-wallet/internal/entity"
 )
 
-type Client struct {
+type ClientDB struct {
 	DB *sql.DB
 }
 
-func NewClientDB(db *sql.DB) *Client {
-	return &Client{
+func NewClientDB(db *sql.DB) *ClientDB {
+	return &ClientDB{
 		DB: db,
 	}
 }
 
-func (c *Client) Get(id string) (*entity.Client, error) {
+func (c *ClientDB) Get(id string) (*entity.ClientDB, error) {
 	client := &entity.Client{}
 	stmt, err := c.DB.Prepare("SELECT id, name, email, created_at FROM clients WHERE id = ?")
 	
@@ -33,7 +33,7 @@ func (c *Client) Get(id string) (*entity.Client, error) {
 	return client, nil
 }
 
-func (c *Client) Save(client *entity.Client) error {
+func (c *ClientDB) Save(client *entity.Client) error {
 	stmt, err := c.DB.Prepare("INSERT INTO clients (id, name, email, created_at) VALUES (?, ?, ?, ?)")
 	
 	if err != nil {
